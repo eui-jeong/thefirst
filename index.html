@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<title>EUI-JEONG</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&Alfa+Slab+One&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Varela+Round&family=Viaoda+Libre&display=swap" rel="stylesheet">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/ScrollTrigger.min.js"></script>
+		<script type="text/javascript" src="/moon/C4/smooth-scroll.js"></script>
+		 <script src="/moon/C5/jquery1.js"></script>
+	  	<base target="_blink">
+		
+		<link rel="stylesheet" type="text/css" href="/moon/css/base.css">
+		<link rel="icon" href="https://blog.kakaocdn.net/dn/IA5N2/btq4DhK2NAQ/drbOFiyG5X0BmQjtp6CDAK/img.png">
+		<link rel="stylesheet" type="text/css" href="/moon/C4/ani.css">
+
+		
+		 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+		<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="index.css">
+		<script type="text/javascript">
+			window.onload=function() {
+			// var bubble=gsap.to(".sticker",{
+			// 	ease: "expo.inOut",
+			// 	duration:2,
+			// 	// rotate:5,
+			// 	x:"110%",
+			// 	y:10,
+			// 	// yoyo: true,
+			// 	// repeat: -1,
+			// });
+			var wcnt = 0;
+			var ver = gsap.to(".one",{
+				ease: "slow(0.5, 0.7, false)",
+				duration: 5,
+				// y:"100%",
+				x: "-400%",
+
+				rotate:360,
+				yoyo: true,
+				repeat: -2,
+			});
+
+			
+			var ct=document.querySelector('.ct');
+			var tong=document.querySelector('.tong');
+			ct.onclick=function() {
+				ct.classList.toggle('color');
+				tong.classList.toggle('long');
+				gsap.to(".tong",{
+				duration: 1,
+					x:200,
+					y:70,
+					scale: 1,
+					ease: "circ.out",
+					stagger: {
+						amount:1.5,
+						grid: "auto",
+						from: "center",
+					},
+			});
+				
+				
+			}
+
+				const swiper = new Swiper('.swiper-container', {
+				// Optional parameters
+				loop: true,
+				slidesPerView: 5,
+				spaceBetween: 20,
+				// If we need pagination	
+				pagination: {
+					el: '.swiper-pagination',
+					clickable: true
+				},
+
+				// Navigation arrows
+				navigation: {
+					nextEl: '.swiper-button-next',
+					prevEl: '.swiper-button-prev',
+				},
+			});
+
+			
+
+			var slides = document.querySelectorAll("#main .swiper-slide");
+			var angles = [];
+			var two=document.querySelector("#two");
+			var del=document.querySelector(".del");		
+			for(var i = 0; i < slides.length; i++) {
+				angles.push(getRotate(slides[i]));
+
+				(function(i) {
+					slides[i].onclick = function() {
+						// console.log(this.classList.contains("swiper-slide-duplicate"));
+						two.classList.add("black");
+						del.style.display='none';
+						
+						setAngle(slides);
+
+						(function(nowSlide) {
+							setTimeout(function() {
+								var thisIndex = Number(nowSlide.getAttribute("data-swiper-slide-index"));
+
+								swiper.slideTo(thisIndex + 3);
+
+								if(!nowSlide.classList.contains("swiper-slide-duplicate")) {
+									nextSlideMove50(nowSlide, slides);
+									prevSlideMove50(nowSlide, slides);
+									showMain(nowSlide);
+								} else {
+									for(var j = 0; j < slides.length; j++) {
+										if(slides[j].getAttribute("data-swiper-slide-index") == thisIndex && !slides[j].classList.contains("swiper-slide-duplicate")) {
+											nextSlideMove50(slides[j], slides);
+											prevSlideMove50(slides[j], slides);
+											showMain(slides[j]);
+										}
+									}
+								}
+							}, 400);
+						})(this);
+					}
+				})(i);
+			}
+
+			function setAngle(slides) {
+				for(var j = 0; j < slides.length; j++) {
+					slides[j].style.transform = 'translateX(0px) rotate(' + angles[j] + 'deg)';
+				}
+			}
+
+			function showMain(slide) {
+				slide.style.transform = 'translateX(0px) rotate(0deg)';
+			}
+
+			function nextSlideMove50(slide, slides) {
+				var nextSlide = slide.nextElementSibling;
+				while(nextSlide) {
+					var angle = getRotate(nextSlide);
+					nextSlide.style.transform = 'translateX(100px) rotate(' + angle + 'deg)';
+					nextSlide = nextSlide.nextElementSibling;
+				}
+			}
+
+			// function nextSlideMoveZero(slide) {
+			// 	var nextSlide = slide.nextElementSibling;
+			// 	while(nextSlide) {
+			// 		var angle = getRotate(nextSlide);
+			// 		nextSlide.style.transform = 'translateX(0px) rotate(' + angle + 'deg)';
+			// 		nextSlide = nextSlide.nextElementSibling;
+			// 	}
+			// }
+
+			function prevSlideMove50(slide, slides) {
+				var prevSlide = slide.previousElementSibling;
+				while(prevSlide) {
+					var angle = getRotate(prevSlide);
+					prevSlide.style.transform = 'translateX(-100px) rotate(' + angle + 'deg)';
+					prevSlide = prevSlide.previousElementSibling;
+				}
+			}
+
+			// function prevSlideMoveZero(slide) {
+			// 	var prevSlide = slide.previousElementSibling;
+			// 	while(prevSlide) {
+			// 		var angle = getRotate(prevSlide);
+			// 		prevSlide.style.transform = 'translateX(0px) rotate(' + angle + 'deg)';
+			// 		prevSlide = prevSlide.previousElementSibling;
+			// 	}
+			// }
+
+			function getRotate(ele) {
+				var style = window.getComputedStyle(ele);
+				var matrix = new WebKitCSSMatrix(style.transform);
+				var angle = Math.round(Math.asin(matrix.m12) * (180/Math.PI));
+				return angle;
+			}
+		};
+		</script>
+	</head>
+	<body>
+		<div class="bubble"></div>
+		<div class="back" onclick="smoothScroll('one');"></div>
+		<div class="wrap">
+			<div class="clearfix">
+				<div class="main" id="one">
+					<div class="container">
+						<div class="clearfix">
+							<div class="ver">
+								<div class="text2">
+								It's
+								</div>
+								<div class="text">
+								Now or Never
+								</div>
+								
+							</div>
+							<div class="seturn">
+								<div class="one"></div>
+								<div class="sticker"></div>
+								<div class="sticker2"></div>
+								<div class="tri"></div>
+							</div>
+							<div class="category">
+								<div class="ct"><i class="fas fa-plus"></i></div>
+								<div class="tong">
+									<div class="ct4">Home &#10003;</div>
+									<div class="ct1" onclick="smoothScroll('two');">Portfolio</div>
+									<div class="ct2" onclick="smoothScroll('three');">About me</div>
+									<div class="ct3" onclick="smoothScroll('four');">Contact</div>
+								</div>
+							</div>
+						</div>
+					</div>	
+				</div>
+				<div class="main" id="two">
+					<div class="container2">
+
+						<div class="Memories">
+							<p class="del">" Portfolio "</p>
+							<p class="stxt01 ">마녀공장 리디자인 <a href="https://bbbin.cafe24.com/portfolio/hello/nature.html"><span>GO Site</span></a></p>
+							<p class="stxt02">아스트로 웹사이트 제작 <a href="https://bbbin.cafe24.com/portfolio/hello/fantagio.html"><span>GO Site</span></a></p>
+							<p class="stxt03">일룸 리디자인 <a href="https://bbbin.cafe24.com/portfolio/hello/intro2.html"><span>GO Site</span></a></p>
+							<p class="stxt04">개인웹사이트 제작 <a href="https://bbbin.cafe24.com/portfolio/hello/astro.html"><span>GO Site</span></a></p>
+							<p class="stxt05">파지티브호텔 리디자인 <a href="https://bbbin.cafe24.com/portfolio/hello/positive.html"><span>GO Site</span></a></p>
+							<p class="stxt06">어프어프 리디자인 <a href="https://bbbin.cafe24.com/portfolio/hello/earp.html"><span>GO Site</span></a></p>
+							<p class="stxt07">일룸 모바일(반응형) <a href="https://bbbin.cafe24.com/portfolio/hello/miloom.html"><span>GO Site</span></a></p>
+							<div class="swiper-container mySwiper" id="main">
+						      <div class="swiper-wrapper">
+						        <div class="swiper-slide slide01">
+						       
+						        </div>
+						        <div class="swiper-slide slide02"></div>
+						        <div class="swiper-slide slide03"></div>
+						        <div class="swiper-slide slide04">
+						        
+						        </div>
+						        <div class="swiper-slide slide05"></div>
+						        <div class="swiper-slide slide06"></div>
+						        <div class="swiper-slide slide07"></div>
+						    <!--     <div class="swiper-slide slide08"></div> -->
+						      </div>
+						       <div class="swiper-button-next"></div>
+						      <div class="swiper-button-prev"></div>
+						      
+						    </div>
+						</div>
+					</div>
+					
+				</div>
+				<div class="main" id="three">
+					<div class="container">
+					<div class="sc"></div>
+					<div class="mail"></div>
+					<div class="mail2"></div>
+						<div class="clearfix">
+							<div class="clearfix">
+								<div class="big"></div>
+								<div class="tag"></div>
+							</div>
+							<div class="info"></div>
+						</div>
+					</div>
+				</div>
+				<div class="main" id="four">
+					<div class="contact">C</div>
+					<div class="contact2">O</div>
+					<div class="contact3">N</div>
+					<div class="contact4">T</div>
+					<div class="contact5">A</div>
+					<div class="contact6">C</div>
+					<div class="contact7">T</div>
+
+					<div class="dcontact">C</div>
+					<div class="dcontact2">O</div>
+					<div class="dcontact3">N</div>
+					<div class="dcontact4">T</div>
+					<div class="dcontact5">A</div>
+					<div class="dcontact6">C</div>
+					<div class="dcontact7">T</div>
+					<div class="planet"></div>
+				
+					<div class="talk talk2">
+						<p class="bold">" 이메일 "</p>
+						<p>euijeong20@naver.com</p>
+						<p>ejissalt@gmail.com</p>
+						
+						<p class="bold">" 카톡 ID "</p>
+						<p>hicpo</p>
+					</div>
+					<div class="dar"></div>
+					<div class="cursor cursor2"></div>
+
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="hello/sea.js"></script>
+	</body>
+</html>
